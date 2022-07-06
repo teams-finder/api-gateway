@@ -1,0 +1,30 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          my-keycloak-provider:
+            issuer-uri: http://localhost:8080/realms/hackathon-organizer
+        registration:
+          keycloak-spring-gateway-client:
+            provider: my-keycloak-provider
+            client-id: spring-gateway-client
+            client-secret: Js2Xf8zulkCnP6olJBWpFZwHKbQeSAYs
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/keycloak'
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: test-service
+          uri: lb://test-service
+          predicates:
+            - Path=/api/test
+eureka:
+  instance:
+    instance-id: ${spring.application.name}-${random.uuid}
+server:
+  port: 9090
