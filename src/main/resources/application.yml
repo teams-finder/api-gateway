@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: userWriteModule
+          uri: lb://USER-WRITE-SERVICE
+          predicates:
+            - Path=/**
+        - id: userReadModule
+          uri: lb://USER-READ-SERVICE
+          predicates:
+            - Path=/**
+  application:
+    name: api-gateway
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
