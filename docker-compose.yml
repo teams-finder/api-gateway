@@ -1,29 +1,25 @@
 version: "3.1"
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:15.0.1
+    image: quay.io/keycloak/keycloak:16.0.0
     ports:
       - "8080:8080"
     environment:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
-      - KK_TO_RMQ_URL=localhost
+      - KK_TO_RMQ_URL=rabbitmq
       - KK_TO_RMQ_PORT=5672
-      - KK_TO_RMQ_EXCHANGE=amq.topic
-      - KK_TO_RMQ_USERNAME=quest
-      - KK_TO_RMQ_PASSWORD=quest
-      - KK_TO_RMQ_USE_TLS=false
+      - KK_TO_RMQ_USERNAME=guest
+      - KK_TO_RMQ_PASSWORD=guest
+      - KK_TO_RMQ_VHOST=/
+    volumes:
+      - /home/revo/teamsfinder/keycloak_plugins/keycloak-to-rabbit-3.0.jar:/opt/jboss/keycloak/standalone/deployments/keycloak-to-rabbit-3.0.jar
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    container_name: 'rabbitmq'
     ports:
       - 5672:5672
-    volumes:
-      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-    networks:
-      - rabbitmq_go_net
-
-networks:
-  rabbitmq_go_net:
-    driver: bridge
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER:guest
+      - RABBITMQ_DEFAULT_PASS:guest
