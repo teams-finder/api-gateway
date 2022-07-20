@@ -18,11 +18,13 @@ spring:
         - id: userWriteModule
           uri: lb://USER-WRITE-SERVICE
           predicates:
-            - Path=/**
+            - Path=/users/**
+            - Method=PATCH
         - id: userReadModule
           uri: lb://USER-READ-SERVICE
           predicates:
-            - Path=/**
+            - Path=/users/**
+            - Method=GET
   application:
     name: api-gateway
 eureka:
